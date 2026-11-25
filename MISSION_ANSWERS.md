@@ -216,7 +216,7 @@ POST /ask   -> 200 {"answer":"Tôi là AI agent được deploy lên cloud. Câu
   ⚠️  Chưa kiểm tra được: Graceful shutdown
 ```
 
-*(Chi tiết mục 11: `✅ Code xử lý SIGTERM / lifespan shutdown`, `✅ Docker: docker stop tắt êm (exit code 0, 0.6s)`, chỉ có check `Khi chạy: SIGTERM lúc đang có request` báo `⚠️ Windows không gửi được SIGTERM` do đang chạy Python trên Windows thay vì WSL2. Khi chạy trên WSL2/Linux sẽ đạt `PASS 12/12`.)*
+*(Chi tiết mục 11: `✅ Code xử lý SIGTERM / lifespan shutdown`, `✅ Docker: docker stop tắt êm (exit code 0, 0.6s)`; trên Windows check gửi `SIGTERM` trực tiếp vào process Python báo `⚠️`, nhưng đã kiểm chứng thêm bằng `check_production_ready.py --skip-docker` trong container `python:3.11-slim` POSIX cho kết quả `✅ Khi chạy: SIGTERM lúc đang có request → request vẫn 200, process tự thoát — exit code 0`.)*
 
 ---
 

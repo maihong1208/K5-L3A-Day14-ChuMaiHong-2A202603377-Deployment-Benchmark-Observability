@@ -9,16 +9,26 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
-r = (
-    redis.from_url(
-        settings.redis_url,
-        decode_responses=True,
-        socket_connect_timeout=1,
-        socket_timeout=1,
-    )
-    if settings.redis_url
-    else None
-)
+
+def _create_redis_client():
+    raw_url = (settings.redis_url or "").strip()
+    if not raw_url:
+        return None
+    if "://" not in raw_url:
+        raw_url = f"redis://{raw_url}"
+    try:
+        return redis.from_url(
+            raw_url,
+            decode_responses=True,
+            socket_connect_timeout=2,
+            socket_timeout=2,
+        )
+    except Exception as exc:
+        logger.warning("Invalid REDIS_URL (%s): %s", type(exc).__name__, exc)
+        return None
+
+
+r = _create_redis_client()
 
 
 def redis_healthy() -> bool:

@@ -1,6 +1,6 @@
 # Day 14 Lab — Mission Answers
 
-> Ghi chú môi trường: Đã chạy đầy đủ với **Docker Desktop (`29.9.3`)** cho Part 2, Part 5, Part 6 (`check_production_ready.py`) và Part 7 (Bước 1 & Bước 2). Riêng bước **deploy lên Cloud** (Part 3/CP6) cần tài khoản Railway/Render của bạn, và check `SIGTERM` trực tiếp vào process Python trên Windows của `check_production_ready.py` báo `⚠️` (cần chạy trong WSL2/Linux để đạt `PASS 12/12`).
+> Ghi chú môi trường: Đã chạy đầy đủ với **Docker Desktop (`29.9.3`)** cho Part 2, Part 5, Part 6 (`check_production_ready.py`) và Part 7 (Bước 1 & Bước 2), và đã deploy thành công Part 6 lên **Render** (`Live`). Check `SIGTERM` trực tiếp vào tiến trình Python của `check_production_ready.py` báo `⚠️` trên Windows nhưng đã kiểm chứng đạt `✅` khi chạy trong container Linux `python:3.11-slim`.
 
 ---
 
@@ -91,9 +91,14 @@ Agent (FastAPI, port 8000, depends_on redis & qdrant healthy)
 
 ## Part 3: Cloud Deployment
 
-### URL Public (Agent Part 6)
-- **URL**: `[CẦN DEPLOY — chạy railway up hoặc Render Blueprint trong 06-lab-complete/ rồi điền URL vào đây và DEPLOYMENT.md]`
-- **Screenshots**: xem `screenshots/dashboard.png`, `screenshots/running.png`, `screenshots/test.png` (sau khi deploy).
+### URL Public (Agent Part 6 trên Render)
+- **URL**: https://k5-l3a-day14-chumaihong-2a202603377-ohfw.onrender.com
+- **Kết quả 4 lệnh kiểm tra CP6** (chi tiết xem [DEPLOYMENT.md](DEPLOYMENT.md)):
+  - `GET /health` → `200` (`{"status":"ok","environment":"production"}`)
+  - `GET /ready` → `200` (`{"status":"ready"}`, kết nối thành công tới Render Key Value Redis)
+  - `POST /ask` (không có `X-API-Key`) → `401` (`{"detail":"Missing or invalid API key"}`)
+  - `POST /ask` (có `X-API-Key`) → `200` (`{"question":"What is deployment?","answer":"Deployment là quá trình đưa code từ máy bạn lên server để người khác dùng được.",...}`)
+- **Screenshots**: [dashboard.png](screenshots/dashboard.png), [running.png](screenshots/running.png), [test.png](screenshots/test.png).
 
 ### So sánh `railway.toml` và `render.yaml` (trong `06-lab-complete/`)
 
